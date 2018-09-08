@@ -7,7 +7,7 @@ import (
 )
 
 //
-type Pass struct {
+type PassImpl struct {
 	// Standard Keys: Information that is required for all passes.
 	FormatVersion      int    `json:"formatVersion"`      // Version of the file format. The value must be 1.
 	PassTypeIdentifier string `json:"passTypeIdentifier"` // Pass type identifier, as issued by Apple. The value must correspond with your signing certificate.
@@ -48,6 +48,10 @@ type Pass struct {
 	WebServiceURL       string `json:"webServiceURL,omitempty"`       // The URL of a web service that conforms to the API described in Passbook Web Service Reference.
 }
 
+type Pass struct {
+	PassImpl
+}
+
 func (p Pass) MarshalJSON() ([]byte, error) {
 	if p.Description == "" {
 		return nil, errors.New("Empty Description")
@@ -76,5 +80,5 @@ func (p Pass) MarshalJSON() ([]byte, error) {
 	if p.WebServiceURL != "" && !strings.HasPrefix(p.WebServiceURL, "https://") {
 		return nil, errors.New("The Web Service URL must use the HTTPS protocol")
 	}
-	return json.Marshal(p)
+	return json.Marshal(p.PassImpl)
 }
